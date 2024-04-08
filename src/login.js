@@ -1,11 +1,8 @@
 const core = require('@actions/core');
-const io = require('@actions/io');
+const exec = require('@actions/exec');
 
-const path = require('path');
-const fs = require('fs');
 const ROAClient = require('@alicloud/pop-core').ROAClient;
 const RPCClient = require('@alicloud/pop-core').RPCClient;
-
 
 function getAPIEndpoint(regionId) {
     return `https://cr.${regionId}.aliyuncs.com`
@@ -62,7 +59,7 @@ async function run() {
                 accessKeySecret,
                 securityToken,
                 endpoint: endpoint,
-                codes: ['success'], 
+                codes: ['success'],
                 apiVersion: '2018-12-01'
             });
             try {
@@ -83,24 +80,26 @@ async function run() {
         loginServer = 'https://index.docker.io/v1/';
     }
 
-    let authenticationToken = Buffer.from(`${username}:${password}`).toString('base64');
+    let stdout = '';
+    let stderr = '';
 
-    let config = {
-        "auths": {
-            [loginServer]: {
-                auth: authenticationToken
+    const exitCode = await exec.exec('docker', ['login', '-u', username, '-p', password, loginServer], {
+        silent: true,
+        ignoreReturnCode: true,
+        listeners: {
+            stdout: (data) => {
+                stdout += data.toString();
+            },
+            stderr: (data) => {
+                stderr += data.toString();
             }
         }
-    }
+    });
 
-    const runnerTempDirectory = process.env['RUNNER_TEMP']; // Using process.env until the core libs are updated
-    const dirPath = path.join(runnerTempDirectory, `docker_login_${Date.now()}`);
-    await io.mkdirP(dirPath);
-    const dockerConfigPath = path.join(dirPath, `config.json`);
-    core.debug(`Writing docker config contents to ${dockerConfigPath}`);
-    fs.writeFileSync(dockerConfigPath, JSON.stringify(config));
-    core.exportVariable('DOCKER_CONFIG', dirPath);
-    console.log('DOCKER_CONFIG environment variable is set');
+    if (exitCode !== 0) {
+        core.debug(stdout);
+        throw new Error(`Could not login to registry ${loginServer}: ${stderr}`);
+    }
 }
 
 run().catch(e => core.setFailed(e));
