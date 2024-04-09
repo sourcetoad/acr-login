@@ -1,4 +1,6 @@
-# Log in to a container registry
+# Aliyun (Alibaba Cloud) Container Registry Login
+_Forked from [aliyun/acr-login](https://github.com/aliyun/acr-login) to prevent manual creation of docker config file._
+
 Use this GitHub Action to [log in to a private container registry](https://docs.docker.com/engine/reference/commandline/login/) of [Alibaba Cloud Container Registry](https://www.aliyun.com/product/acr). Once login is done, the next set of actions in the workflow can perform tasks such as building, tagging and pushing containers.
 
 ```yaml

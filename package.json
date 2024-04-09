@@ -11,7 +11,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/aliyun/acr-login.git"
-    },    
+    },
     "keywords": [
         "actions",
         "alibaba",
@@ -27,7 +27,7 @@
     "homepage": "https://github.com/aliyun/acr-login#readme",
     "dependencies": {
         "@actions/core": "^1.9.1",
-        "@actions/io": "^1.0.2",
+        "@actions/exec": "^1.1.1",
         "@alicloud/pop-core": "^1.7.13"
     },
     "devDependencies": {
