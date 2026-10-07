@@ -26,7 +26,7 @@
     },
     "homepage": "https://github.com/aliyun/acr-login#readme",
     "dependencies": {
-        "@actions/core": "^1.9.1",
+        "@actions/core": "^1.11.1",
         "@actions/exec": "^1.1.1",
         "@alicloud/pop-core": "^1.7.13"
     },
